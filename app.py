@@ -115,7 +115,7 @@ def home():
 
     # 튜플을 딕셔너리로 변환합니다.
     todos = [{'TodoID': todo[0], 'UserID': todo[1], 'Title': todo[2], 'IsCompleted': todo[3]} for todo in todos_tuples]
-    return render_template('home.html', name=current_user.username, todos=todos, is_admin = int(current_user.id) == 1
+    return render_template('home.html', current_page='home', name=current_user.username, todos=todos, is_admin = int(current_user.id) == 1
 
 )
 
@@ -203,24 +203,28 @@ def team():
         return redirect(url_for('home'))
 
     cursor = mysql.connection.cursor()
-    # 현재 사용자와 같은 TeamID를 가진 사용자들의 정보 및 프로필 사진을 가져옵니다.
+    # Get information and profile pictures of users with the same TeamID as the current user.
     cursor.execute("SELECT UserID, Username, ProfilePic FROM Users WHERE TeamID = %s", (current_user.team_id,))
     team_members_tuples = cursor.fetchall()
 
-    # 현재 사용자를 제외한 팀 멤버 목록을 생성합니다.
+    # Create a list of team members excluding the current user.
     team_members = [
         {
             'UserID': member[0],
             'Username': member[1],
-            'ProfilePic': member[2] if member[2] else 'https://example.com/default-profile-pic.jpg'  # ProfilePic이 NULL이면 기본 URL 사용
+            # Make sure the default image URL is accessible.
+            'ProfilePic': member[2] if member[2] else 'https://surgassociates.com/wp-content/uploads/610-6104451_image-placeholder-png-user-profile-placeholder-image-png-600x629.jpg'
         }
         for member in team_members_tuples if member[0] != current_user.id
     ]
 
-    # 현재 사용자의 프로필 사진을 가져옵니다.
+    # Get the profile picture of the current user.
     cursor.execute("SELECT ProfilePic FROM Users WHERE UserID = %s", (current_user.id,))
     current_user_pic_tuple = cursor.fetchone()
-    current_user_pic = current_user_pic_tuple[0] if current_user_pic_tuple[0] else 'https://example.com/default-profile-pic.jpg'
+    # Make sure the default image URL is accessible.
+    current_user_pic = current_user_pic_tuple[0] if current_user_pic_tuple[0] else 'https://path-to-your-default-image.jpg'
+
+    cursor.close()  # Remember to close the cursor after the operations are done.
 
     return render_template('team.html', name=current_user.username, current_page='team', team_members=team_members, current_user_pic=current_user_pic)
 
