@@ -218,19 +218,25 @@ def team():
 @app.route('/edit_team_member/<int:user_id>')
 @login_required
 def edit_team_member(user_id):
-    cursor = mysql.connection.cursor(dictionary=True)
+    cursor = mysql.connection.cursor()
     cursor.execute("SELECT UserID, Username, ProfilePic FROM Users WHERE UserID = %s", (user_id,))
-    user_details = cursor.fetchone()
+    user_details_tuple = cursor.fetchone()
     cursor.close()
 
-    if user_details:
+    if user_details_tuple:
+        # Convert the tuple to a dictionary
+        user_details = {
+            'UserID': user_details_tuple[0],
+            'Username': user_details_tuple[1],
+            'ProfilePic': user_details_tuple[2]
+        }
         # If user details are found, pass them to the template.
         return render_template('team_edit.html', user=user_details)
     else:
         # If no details are found, redirect to the team page with an error message.
         flash('No user found with that ID.', 'danger')
         return redirect(url_for('team'))
-    
+
 # 팀 실질적 편집 라우트
 @app.route('/process_edit_team_member/<int:user_id>', methods=['POST'])
 @login_required
