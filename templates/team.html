@@ -1,0 +1,34 @@
+{% extends "bootstrap/base.html" %}
+{% block content %}
+<div class="container">
+    {% include "nav.html" %}
+    <h1>Team Members</h1>
+    <!-- Team Members List -->
+    <table class="table">
+        <thead>
+            <tr>
+                <th>User ID</th>
+                <th>Username</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for member in team_members %}
+            <tr>
+                <td>{{ member.UserID }}</td>
+                <td>{{ member.Username }}</td>
+                <td>
+                    <!-- Replace with actual action links or buttons if needed -->
+                    <a href="{{ url_for('edit_team_member', user_id=member.UserID) }}" class="btn btn-primary btn-sm">View</a>
+                    <a href="{{ url_for('delete_team_member', user_id=member.UserID) }}" class="btn btn-danger btn-sm">Remove</a>
+                </td>
+            </tr>
+            {% else %}
+            <tr>
+                <td colspan="3">No team members found.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

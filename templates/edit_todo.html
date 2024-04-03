@@ -1,0 +1,10 @@
+{% extends "bootstrap/base.html" %}
+{% block content %}
+<div class="container">
+    <h1>Edit Todo</h1>
+    <form action="{{ url_for('update_todo', todo_id=todo.TodoID) }}" method="post">
+        <input type="text" name="title" value="{{ todo.Title }}" required>
+        <button type="submit">Update</button>
+    </form>
+</div>
+{% endblock %}

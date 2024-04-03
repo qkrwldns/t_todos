@@ -1,0 +1,31 @@
+{% block content %}
+<header>
+    <h3>T_Todos</h3>
+    <div class="my-menu-btn">
+        <span class="my-menu-btn-burger"></span>
+    </div>
+    <nav class="my-nav">
+        <div class="my-menu-btn">
+            <span class="my-menu-btn-burger"></span>
+        </div>
+        <ul class="my-menu-nav">
+            {% if current_page != 'team' %}
+            <li class="my-menu-nav-item">
+                <a href="{{ url_for('team') }}" class="my-menu-nav-link">Team</a>
+            </li>
+            {% endif %}
+            {% if current_page != 'home' %}
+                <li class="my-menu-nav-item">
+                    <a href="{{ url_for('home') }}" class="my-menu-nav-link">Todo</a>
+                </li>
+            {% endif %}
+            <li class="my-menu-nav-item">
+                <a href="{{ url_for('logout') }}" class="my-menu-nav-link">Logout</a>
+            </li>
+            <li class="my-menu-nav-item">
+                <p>{{ name }}</p>
+            </li>
+        </ul>
+    </nav>
+</header>
+{% endblock %}

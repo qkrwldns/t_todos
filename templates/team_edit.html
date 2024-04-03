@@ -1,0 +1,19 @@
+{% extends "bootstrap/base.html" %}
+{% block content %}
+<div class="container">
+    {% include "nav.html" %}
+    <h1>Edit Team Member</h1>
+    <!-- User Details -->
+    <div class="user-details">
+        <h2>{{ user.Username }}</h2>
+        <img src="{{ user.ProfilePic }}" alt="Profile Picture" />
+        <!-- Add more details you want to show -->
+    </div>
+    <!-- User Edit Form -->
+    <form action="{{ url_for('process_edit_team_member', user_id=user.UserID) }}" method="post">
+        <input type="text" name="username" value="{{ user.Username }}" required>
+        <!-- Include other fields you want to be able to edit -->
+        <button type="submit" class="btn btn-success">Save Changes</button>
+    </form>
+</div>
+{% endblock %}
