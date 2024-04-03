@@ -50,17 +50,3 @@
 </div>
 {% endblock %}
 
-{% for member in team_members %}
-{% if member.UserID != current_user.id %}
-<tr>
-    <!-- ... other table data ... -->
-    <td>
-       
-    </td>
-</tr>
-{% endif %}
-{% else %}
-<tr>
-    <td colspan="3">No team members found.</td>
-</tr>
-{% endfor %}

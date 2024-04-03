@@ -95,27 +95,29 @@ def logout():
 def home():
     cursor = mysql.connection.cursor()
 
-    # 현재 로그인한 사용자의 정보를 불러오기
+    # 관리자의 TeamID를 가져옵니다.
+    cursor.execute("SELECT TeamID FROM Users WHERE UserID = 1")
+    admin_team_id = cursor.fetchone()[0]
+
+    # 현재 사용자의 TeamID를 확인합니다.
     cursor.execute("SELECT TeamID FROM Users WHERE UserID = %s", (current_user.id,))
-    user_info = cursor.fetchone()
+    user_team_id = cursor.fetchone()[0]
+
+    if user_team_id == admin_team_id:
+        # 관리자와 같은 TeamID를 가진 사용자는 관리자의 To-Do 항목을 볼 수 있습니다.
+        cursor.execute("SELECT TodoID, UserID, Title, IsCompleted FROM Todos WHERE UserID = 1")
+    else:
+        # 관리자와 다른 TeamID를 가진 사용자는 볼 권한이 없습니다.
+        return render_template('home.html', name=current_user.username, message="You don't have permission to view these todos.")
+
+    todos_tuples = cursor.fetchall()
     cursor.close()
 
-    # User 정보가 존재하고 TeamID가 1인 경우에만 todos를 불러오기
-    if user_info and user_info[0] == 1:
-        cursor = mysql.connection.cursor()
-        cursor.execute("SELECT TodoID, UserID, Title, IsCompleted FROM Todos WHERE UserID = %s", (current_user.id,))
-        todos_tuples = cursor.fetchall()
-        cursor.close()
+    # 튜플을 딕셔너리로 변환합니다.
+    todos = [{'TodoID': todo[0], 'UserID': todo[1], 'Title': todo[2], 'IsCompleted': todo[3]} for todo in todos_tuples]
+    return render_template('home.html', name=current_user.username, todos=todos, is_admin = int(current_user.id) == 1
 
-        # Convert tuples to dictionaries
-        todos = [
-            {'TodoID': todo[0], 'UserID': todo[1], 'Title': todo[2], 'IsCompleted': todo[3]}
-            for todo in todos_tuples
-        ]
-        return render_template('home.html', name=current_user.username, todos=todos)
-    
-    # TeamID가 1이 아닌 경우 또는 user_info가 없는 경우 메시지 표시
-    return render_template('home.html', name=current_user.username, message="You don't have permission to view these todos.")
+)
 
 # todo 추가 라우트
 @app.route('/add_todo', methods=['POST'])
@@ -137,15 +139,15 @@ def add_todo():
 @app.route('/toggle_todo/<int:todo_id>', methods=['POST'])
 @login_required
 def toggle_todo(todo_id):
-    # Convert the checkbox 'on' or None to True/False
-    is_completed = request.form.get('is_completed') == 'on'
+    # 현재 사용자가 해당 ToDo 항목에 접근할 권한이 있는지 확인하는 코드 추가
+    # 예시로, 현재 사용자가 해당 ToDo의 소유자이거나, 특정 팀의 일원인지 확인할 수 있습니다.
+
     cursor = mysql.connection.cursor()
-    cursor.execute(
-        "UPDATE Todos SET IsCompleted = %s WHERE TodoID = %s AND UserID = %s",
-        (is_completed, todo_id, current_user.id)
-    )
+    # ToDo의 완료 상태를 토글합니다.
+    cursor.execute("UPDATE Todos SET IsCompleted = NOT IsCompleted WHERE TodoID = %s", (todo_id,))
     mysql.connection.commit()
-    cursor.close()  # Close the cursor after operation
+
+    # flash('ToDo status updated successfully.')
     return redirect(url_for('home'))
 
 # todo 삭제 라우트
@@ -165,7 +167,6 @@ def edit_todo(todo_id):
     cursor = mysql.connection.cursor()
     cursor.execute("SELECT TodoID, UserID, Title, IsCompleted FROM Todos WHERE TodoID = %s AND UserID = %s", (todo_id, current_user.id))
     todo_tuple = cursor.fetchone()
-    cursor.close()
 
     if todo_tuple:
         # Convert the tuple to a dictionary
@@ -230,7 +231,6 @@ def edit_team_member(user_id):
     cursor = mysql.connection.cursor()
     cursor.execute("SELECT UserID, Username, ProfilePic FROM Users WHERE UserID = %s", (user_id,))
     user_details_tuple = cursor.fetchone()
-    cursor.close()
 
     if user_details_tuple:
         # Convert the tuple to a dictionary
@@ -259,7 +259,7 @@ def process_edit_team_member(user_id):
     mysql.connection.commit()
     cursor.close()
 
-    # flash('Team member updated successfully!', 'success')
+    flash('Team member updated successfully!', 'success')
     return redirect(url_for('team'))
 
 # 팀 추가 라우트
@@ -285,7 +285,7 @@ def process_add_team_member():
         cursor.execute("UPDATE Users SET TeamID = %s WHERE UserID = %s", ([1], user_id))
         mysql.connection.commit()
         cursor.close()
-        # flash('Team member added successfully!', 'success')
+        flash('Team member added successfully!', 'success')
     else:
         flash('No user selected.', 'danger')
     return redirect(url_for('team'))
