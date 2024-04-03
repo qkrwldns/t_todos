@@ -14,6 +14,7 @@ app.config['MYSQL_USER'] = 'root'
 app.config['MYSQL_PASSWORD'] = os.getenv('MYSQL_PASSWORD')
 app.config['MYSQL_DB'] = 't_todos'
 mysql = MySQL(app)
+app.config['TEMPLATES_AUTO_RELOAD'] = True
 
 login_manager = LoginManager()
 login_manager.init_app(app)
@@ -201,20 +202,28 @@ def team():
         return redirect(url_for('home'))
 
     cursor = mysql.connection.cursor()
-    # 현재 사용자와 같은 TeamID를 가진 사용자들의 정보를 가져옵니다.
-    cursor.execute("SELECT UserID, Username FROM Users WHERE TeamID = %s", (current_user.team_id,))
+    # 현재 사용자와 같은 TeamID를 가진 사용자들의 정보 및 프로필 사진을 가져옵니다.
+    cursor.execute("SELECT UserID, Username, ProfilePic FROM Users WHERE TeamID = %s", (current_user.team_id,))
     team_members_tuples = cursor.fetchall()
-    cursor.close()
 
-    # 튜플을 딕셔너리로 변환
+    # 현재 사용자를 제외한 팀 멤버 목록을 생성합니다.
     team_members = [
-        {'UserID': member[0], 'Username': member[1]}
-        for member in team_members_tuples
+        {
+            'UserID': member[0],
+            'Username': member[1],
+            'ProfilePic': member[2] if member[2] else 'https://example.com/default-profile-pic.jpg'  # ProfilePic이 NULL이면 기본 URL 사용
+        }
+        for member in team_members_tuples if member[0] != current_user.id
     ]
 
-    return render_template('team.html', name=current_user.username,current_page='team', team_members=team_members)
+    # 현재 사용자의 프로필 사진을 가져옵니다.
+    cursor.execute("SELECT ProfilePic FROM Users WHERE UserID = %s", (current_user.id,))
+    current_user_pic_tuple = cursor.fetchone()
+    current_user_pic = current_user_pic_tuple[0] if current_user_pic_tuple[0] else 'https://example.com/default-profile-pic.jpg'
 
-# 팀 실질적 편집 라우트
+    return render_template('team.html', name=current_user.username, current_page='team', team_members=team_members, current_user_pic=current_user_pic)
+
+# 팀 편집 라우트
 @app.route('/edit_team_member/<int:user_id>')
 @login_required
 def edit_team_member(user_id):
@@ -231,7 +240,7 @@ def edit_team_member(user_id):
             'ProfilePic': user_details_tuple[2]
         }
         # If user details are found, pass them to the template.
-        return render_template('team_edit.html', user=user_details)
+        return render_template('team_edit.html', name=current_user.username, user=user_details)
     else:
         # If no details are found, redirect to the team page with an error message.
         flash('No user found with that ID.', 'danger')
@@ -250,7 +259,35 @@ def process_edit_team_member(user_id):
     mysql.connection.commit()
     cursor.close()
 
-    flash('Team member updated successfully!', 'success')
+    # flash('Team member updated successfully!', 'success')
+    return redirect(url_for('team'))
+
+# 팀 추가 라우트
+@app.route('/add_team_member')
+@login_required
+def team_add():
+    cursor = mysql.connection.cursor()
+    cursor.execute("SELECT UserID, Username FROM Users WHERE TeamID IS NULL")
+    users = cursor.fetchall()
+    cursor.close()
+    print(users)
+    return render_template('team_add.html', name=current_user.username, users=users)
+
+
+# 팀 실질적 추가 라우트
+@app.route('/process_add_team_member', methods=['POST'])
+@login_required
+def process_add_team_member():
+    user_id = request.form.get('user_id')
+    if user_id:
+        cursor = mysql.connection.cursor()
+        # 팀 ID 설정을 원하는 값으로 업데이트하세요.
+        cursor.execute("UPDATE Users SET TeamID = %s WHERE UserID = %s", ([1], user_id))
+        mysql.connection.commit()
+        cursor.close()
+        # flash('Team member added successfully!', 'success')
+    else:
+        flash('No user selected.', 'danger')
     return redirect(url_for('team'))
 
 

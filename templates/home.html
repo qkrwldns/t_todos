@@ -3,34 +3,30 @@
 <div class="container">
     {% include "nav.html" %}
     <h1>TO Do</h1>
-
-    {% if message %}
-        <p>{{ message }}</p>
-    {% else %}
-        <form action="{{ url_for('add_todo') }}" method="post">
-            <input type="text" name="title" placeholder="New todo" required>
-            <button type="submit">Add</button>
+    <form action="{{ url_for('add_todo') }}" method="post">
+        <input type="text" name="title" placeholder="New todo" required>
+        <button type="submit">Add</button>
+    </form>
+    
+    <ul>
+        {% for todo in todos %}
+    <li>
+        <form action="{{ url_for('toggle_todo', todo_id=todo.TodoID) }}" method="post" style="display: inline;">
+            <input type="checkbox" name="is_completed" onchange="this.form.submit()" {{ 'checked' if todo.IsCompleted }}>
+            {{ todo.Title }}
         </form>
-        
-        <ul>
-            {% for todo in todos %}
-            <li>
-                <form action="{{ url_for('toggle_todo', todo_id=todo.TodoID) }}" method="post" style="display: inline;">
-                    <input type="checkbox" name="is_completed" onchange="this.form.submit()" {{ 'checked' if todo.IsCompleted }}>
-                    {{ todo.Title }}
-                </form>
-                {% if not todo.IsCompleted %}
-                    <!-- Edit Button -->
-                    <a href="{{ url_for('edit_todo', todo_id=todo.TodoID) }}" class="btn btn-primary">Edit</a>
-                    <!-- Delete Button -->
-                    <form action="{{ url_for('delete_todo', todo_id=todo.TodoID) }}" method="post" style="display: inline;">
-                        <button type="submit" class="btn btn-danger">Delete</button>
-                    </form>
-                {% endif %}
-            </li>
-            {% endfor %}
-        </ul>
-    {% endif %}
+        {% if not todo.IsCompleted %}
+            <!-- Edit Button -->
+            <a href="{{ url_for('edit_todo', todo_id=todo.TodoID) }}" class="btn btn-primary">Edit</a>
+            <!-- Delete Button -->
+            <form action="{{ url_for('delete_todo', todo_id=todo.TodoID) }}" method="post" style="display: inline;">
+                <button type="submit" class="btn btn-danger">Delete</button>
+            </form>
+        {% endif %}
+    </li>
+{% endfor %}
+
+    </ul>
     
 </div>
 {% endblock %}

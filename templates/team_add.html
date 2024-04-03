@@ -1,0 +1,16 @@
+{% extends "bootstrap/base.html" %}
+{% block content %}
+<div class="container">
+    {% include "nav.html" %}
+    <h1>Add Team Member</h1>
+    <form action="{{ url_for('process_add_team_member') }}" method="post">
+        <label for="user_id">Select User:</label>
+        <select name="user_id" id="user_id" required>
+            {% for user in users %}
+                <option value="{{ user[0] }}">{{ user[1] }}</option>
+            {% endfor %}
+        </select>
+        <button type="submit" class="btn btn-success">Add</button>
+    </form>
+</div>
+{% endblock %}

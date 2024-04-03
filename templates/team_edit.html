@@ -6,7 +6,7 @@
     <!-- User Details -->
     <div class="user-details">
         <h2>{{ user.Username }}</h2>
-        <img style="width: 300px;" src="{{ user.ProfilePic }}" alt="Profile Picture" />
+        <img style="width: 300px;" src="{{ user.ProfilePic|default('https://surgassociates.com/wp-content/uploads/610-6104451_image-placeholder-png-user-profile-placeholder-image-png-600x629.jpg', true) }}" alt="Profile Picture" />
         <!-- Add more details you want to show -->
     </div>
     <!-- User Edit Form -->

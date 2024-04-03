@@ -2,33 +2,65 @@
 {% block content %}
 <div class="container">
     {% include "nav.html" %}
-    <h1>Team Members</h1>
-    <!-- Team Members List -->
-    <table class="table">
-        <thead>
-            <tr>
-                <th>User ID</th>
-                <th>Username</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for member in team_members %}
-            <tr>
-                <td>{{ member.UserID }}</td>
-                <td>{{ member.Username }}</td>
-                <td>
-                    <!-- Replace with actual action links or buttons if needed -->
-                    <a href="{{ url_for('edit_team_member', user_id=member.UserID) }}" class="btn btn-primary btn-sm">View</a>
-                    <a href="{{ url_for('delete_team_member', user_id=member.UserID) }}" class="btn btn-danger btn-sm">Remove</a>
-                </td>
-            </tr>
-            {% else %}
-            <tr>
-                <td colspan="3">No team members found.</td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+    <div class="row">
+        <a href="{{ url_for('team_add') }}" class="btn btn-success mb-3">Add Team Member</a>
+        <!-- Current User Profile Section -->
+        <div class="col-md-4">
+            <div class="current-user-profile">
+                <!-- Display the current user's profile image and name -->
+                <img style="width: 300px;" src="{{ current_user_pic }}" alt="Profile Picture">
+                <h2>{{ name }}</h2>
+            </div>
+        </div>
+
+        <!-- Team Members List Section -->
+        <div class="col-md-8">
+            <h1>Team Members</h1>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>User ID</th>
+                        <th>Username</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for member in team_members %}
+                    {% if member.UserID != current_user.id %}
+                    <tr>
+                        <td>{{ member.UserID }}</td>
+                        <td>{{ member.Username }}</td>
+                        <td>
+                            <a href="{{ url_for('edit_team_member', user_id=member.UserID) }}" class="btn btn-primary btn-sm">Edit</a>
+                            <form action="{{ url_for('delete_team_member', user_id=member.UserID) }}" method="post" style="display: inline-block;">
+                                <button type="submit" class="btn btn-danger btn-sm">Remove</button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% endif %}
+                    {% else %}
+                    <tr>
+                        <td colspan="3">No team members found.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
 </div>
 {% endblock %}
+
+{% for member in team_members %}
+{% if member.UserID != current_user.id %}
+<tr>
+    <!-- ... other table data ... -->
+    <td>
+       
+    </td>
+</tr>
+{% endif %}
+{% else %}
+<tr>
+    <td colspan="3">No team members found.</td>
+</tr>
+{% endfor %}
