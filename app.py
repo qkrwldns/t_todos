@@ -311,8 +311,8 @@ def delete_team_member(user_id):
 # 채팅 라우트
 @app.route('/chat')
 def chat():
+    # Your chat page logic goes here
     return render_template('chat.html', current_page='chat')
-
 
 if __name__ == '__main__':
     app.run(debug=True)
