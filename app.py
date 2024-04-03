@@ -5,6 +5,7 @@ import os
 from dotenv import load_dotenv
 from flask_bootstrap import Bootstrap
 from forms import LoginForm, RegisterForm  # forms.py에 정의된 WTForms 폼
+from flask_socketio import SocketIO, emit, join_room, leave_room
 
 load_dotenv()
 app = Flask(__name__)
@@ -15,11 +16,12 @@ app.config['MYSQL_PASSWORD'] = os.getenv('MYSQL_PASSWORD')
 app.config['MYSQL_DB'] = 't_todos'
 mysql = MySQL(app)
 app.config['TEMPLATES_AUTO_RELOAD'] = True
-
+socketio = SocketIO(app)
 login_manager = LoginManager()
 login_manager.init_app(app)
 Bootstrap(app)
 
+# --------------------------------------------
 # Flask-Login의 사용자 로더 설정
 @login_manager.user_loader
 def load_user(user_id):
@@ -311,8 +313,12 @@ def delete_team_member(user_id):
 # 채팅 라우트
 @app.route('/chat')
 def chat():
-    # Your chat page logic goes here
     return render_template('chat.html', current_page='chat')
 
+@socketio.on('message')
+def handle_message(data):
+    print('Received message:', data)
+    socketio.emit('message', data)
+
 if __name__ == '__main__':
-    app.run(debug=True)
+    socketio.run(app, debug=True)
