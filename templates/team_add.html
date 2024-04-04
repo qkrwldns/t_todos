@@ -1,20 +1,26 @@
-{% extends "bootstrap/base.html" %}
+{% extends "base.html" %}
 {% block content %}
 <div class="container">
-    {% include "nav.html" %}
     <h1>Add Team Member</h1>
     <form action="{{ url_for('process_add_team_member') }}" method="post">
-        <label for="user_id">Select User:</label>
-        <select name="user_id" id="user_id" required>
+        <select name="user_id" id="user_id" required onchange="updateUserImage()">
+            <option value="">Select a user...</option>
             {% for user in users %}
-                <option value="{{ user[0] }}">{{ user[1] }}</option>
+                <option value="{{ user[0] }}" data-img="{{ user[2]|default('https://surgassociates.com/wp-content/uploads/610-6104451_image-placeholder-png-user-profile-placeholder-image-png-600x629.jpg', true) }}">
+                    {{ user[1] }}
+                </option>
             {% endfor %}
         </select>
+        <img id="userImage" src="" alt="Selected User's Profile Picture" style="width: 50px; height: 50px; object-fit: cover; border-radius: 50%;" hidden/>
         <button type="submit" class="btn btn-success">Add</button>
     </form>
+    <div class="main_image">
+        <a href="{{ url_for('chat') }}">
+            <img src="{{ url_for('static', filename='img/image.png') }}" alt="Chat" style="width: 50px; height: 50px;">
+            chat
+        </a>
+    </div>
 </div>
-<a href="{{ url_for('chat') }}">
-    <img src="https://qkrwldns.github.io/assets/img/avatar.jpg" alt="Chat" style="width: 50px; height: 50px;">
-    Chat!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-</a>
+
+
 {% endblock %}

@@ -273,11 +273,13 @@ def process_edit_team_member(user_id):
 @login_required
 def team_add():
     cursor = mysql.connection.cursor()
-    cursor.execute("SELECT UserID, Username FROM Users WHERE TeamID IS NULL")
+    # Assume ProfilePic is the name of the column containing the image URLs
+    cursor.execute("SELECT UserID, Username, ProfilePic FROM Users WHERE TeamID IS NULL")
     users = cursor.fetchall()
     cursor.close()
     print(users)
     return render_template('team_add.html', name=current_user.username, users=users)
+
 
 
 # 팀 실질적 추가 라우트
@@ -313,7 +315,7 @@ def delete_team_member(user_id):
 # 채팅 라우트
 @app.route('/chat')
 def chat():
-    return render_template('chat.html', current_page='chat')
+    return render_template('chat.html', current_page='chat', name=current_user.username)
 
 @socketio.on('message')
 def handle_message(data):

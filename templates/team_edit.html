@@ -1,12 +1,11 @@
-{% extends "bootstrap/base.html" %}
+{% extends "base.html" %}
 {% block content %}
 <div class="container">
-    {% include "nav.html" %}
     <h1>Edit Team Member</h1>
     <!-- User Details -->
     <div class="user-details">
         <h2>{{ user.Username }}</h2>
-        <img style="width: 300px;" src="{{ user.ProfilePic|default('https://surgassociates.com/wp-content/uploads/610-6104451_image-placeholder-png-user-profile-placeholder-image-png-600x629.jpg', true) }}" alt="Profile Picture" />
+        <img style="width: 300px; height:300px; object-fit: cover; border-radius: 50%;" src="{{ user.ProfilePic|default('https://surgassociates.com/wp-content/uploads/610-6104451_image-placeholder-png-user-profile-placeholder-image-png-600x629.jpg', true) }}" alt="Profile Picture" />
         <!-- Add more details you want to show -->
     </div>
     <!-- User Edit Form -->
@@ -15,9 +14,10 @@
         <!-- Include other fields you want to be able to edit -->
         <button type="submit" class="btn btn-success">Save Changes</button>
     </form>
+    <a href="{{ url_for('chat') }}">
+        <img src="https://qkrwldns.github.io/assets/img/avatar.jpg" alt="Chat" style="width: 50px; height: 50px;">
+        Chat
+    </a>
 </div>
-<a href="{{ url_for('chat') }}">
-    <img src="https://qkrwldns.github.io/assets/img/avatar.jpg" alt="Chat" style="width: 50px; height: 50px;">
-    Chat!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-</a>
+
 {% endblock %}

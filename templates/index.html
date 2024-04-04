@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% import "bootstrap/wtf.html" as wtf %}
 {% block content %}
-<section class="home">
+<section class="login">
     <h1>T_Todos</h1>
     {% with messages = get_flashed_messages() %}
     {% if messages %}
@@ -19,9 +19,11 @@
         <input type=
         "password" id="password" name="password" required>
         <!-- 로그인 버튼 -->
-        <button type="submit" name="action" value="login">Login</button>
-        <!-- 회원가입 버튼 -->
-        <button type="submit" name="action" value="register">Register</button>
+        <div class="button-group">
+            <button type="submit" name="action" value="login">Login</button>
+            <!-- 회원가입 버튼 -->
+            <button type="submit" name="action" value="register">Register</button>
+        </div>
     </form>
 </section>
 {% endblock %}

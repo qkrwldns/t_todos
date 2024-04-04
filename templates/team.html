@@ -1,9 +1,8 @@
-{% extends "bootstrap/base.html" %}
+{% extends "base.html" %}
 {% block content %}
 <div class="container">
-    {% include "nav.html" %}
     <div class="row">
-        <a href="{{ url_for('team_add') }}" class="btn btn-success mb-3">Add Team Member</a>
+        
         <!-- Current User Profile Section -->
         <div class="col-md-4">
             <div class="current-user-profile">
@@ -13,6 +12,8 @@
         </div>
         <!-- Team Members List Section -->
         <div class="col-md-8">
+            <a href="{{ url_for('team_add') }}" class="btn btn-success mb-3">Add Team Member</a>
+
             <h1>Team Members</h1>
             <table class="table">
                 <thead>
@@ -39,11 +40,14 @@
                     {% endfor %}
                 </tbody>
             </table>
+            <div class="main_image">
+                <a href="{{ url_for('chat') }}">
+                    <img src="{{ url_for('static', filename='img/image.png') }}" alt="Chat" style="width: 50px; height: 50px;">
+                    chat
+                </a>
+            </div>
         </div>
     </div>
 </div>
-<a href="{{ url_for('chat') }}">
-    <img src="https://qkrwldns.github.io/assets/img/avatar.jpg" alt="Chat" style="width: 50px; height: 50px;">
-    Chat!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-</a>
+
 {% endblock %}
