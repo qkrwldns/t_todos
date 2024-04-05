@@ -1,3 +1,13 @@
+@font-face {
+    font-family: 'YEONGJUSeonbiTTF';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/2403@1.0/YEONGJUSeonbiTTF.woff2') format('woff2');
+    font-weight: normal;
+    font-style: normal;
+}
+main {
+    height: 100%;
+}
+
 /* --------------------------네비게이션---------------------- */
 
 .header-nav {
@@ -53,7 +63,7 @@
 .login input[type='password'] {
     width: 100%; /* 너비를 100%로 설정합니다. */
     padding: 10px; /* 안쪽 여백을 설정합니다. */
-    margin-bottom: 10px; /* 입력 필드 간의 하단 여백을 설정합니다. */
+    margin-top: 30px; /* 입력 필드 간의 하단 여백을 설정합니다. */
     border-radius: 4px; /* 모서리를 둥글게 만듭니다. */
     border: 1px solid #ccc; /* 테두리 색상을 설정합니다. */
 }
@@ -67,12 +77,12 @@
 
 /* 버튼 스타일을 설정합니다. */
 .login div button {
+    margin-top: 30px;
     padding: 10px 15px; /* 안쪽 여백을 설정합니다. */
     border-radius: 4px; /* 모서리를 둥글게 만듭니다. */
     border: none; /* 테두리를 제거합니다. */
     cursor: pointer; /* 커서를 포인터로 설정합니다. */
     flex: 1; /* 모든 버튼이 동일한 크기를 가지도록 설정합니다. */
-    margin: 0 5px; /* 버튼의 좌우 여백을 설정합니다. */
 }
 
 /* 로그인 버튼의 배경색과 텍스트 색상을 설정합니다. */
@@ -97,6 +107,7 @@
     background: #fff; /* 배경색을 흰색으로 설정합니다 */
     border-radius: 10px; /* 모서리를 둥글게 처리합니다 */
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* 그림자 효과를 추가합니다 */
+    margin-top: 50px;
 }
 
 /* 제목 스타일 */
@@ -117,11 +128,14 @@
     display: flex; /* 항목을 가로로 배열 */
     align-items: center; /* 가운데 정렬 */
     justify-content: space-between; /* 항목과 버튼 사이에 공간 배분 */
-    padding: 10px 0; /* 상하 패딩 추가 */
 }
 
 /* 입력 필드 및 추가 버튼 스타일 */
 .todo-container form {
+    font-size: 15pt;
+    font-family: 'YEONGJUSeonbiTTF';
+    display: flex;
+    align-items: center;
     margin-bottom: 20px; /* 폼 아래 여백 */
     display: flex; /* 가로로 배열 */
 }
@@ -134,53 +148,164 @@
     border-radius: 4px; /* 둥근 모서리 */
 }
 
-/* 버튼 스타일 */
-.todo-container button {
-    padding: 10px 20px;
-    border: none;
+/* 체크박스의 외곽선과 색상을 설정합니다 */
+.todo-container form input[type="checkbox"] {
+    accent-color: #dc3545; /* 체크박스 색상을 지정합니다 */
+    -webkit-appearance: none; /* 웹킷 기반 브라우저에서 기본 스타일 제거 */
+    -moz-appearance: none; /* 모질라 기반 브라우저에서 기본 스타일 제거 */
+    appearance: none; /* 최신 브라우저에서 기본 스타일 제거 */
+    width: 20px; /* 체크박스의 너비를 설정합니다 */
+    height: 20px; /* 체크박스의 높이를 설정합니다 */
+    border: 2px solid #dc3545; /* 분홍색 테두리를 설정합니다 */
+    border-radius: 5px;
+    display: inline-block;
+    vertical-align: middle;
+}
+
+/* 선택된 체크박스의 배경과 테두리 색상을 지정합니다 */
+.todo-container form input[type="checkbox"]:checked {
+    background-color: #dc3545; /* 체크됐을 때 배경색을 지정합니다 */
+    border-color: #dc3545; /* 체크됐을 때 테두리 색상을 지정합니다 */
+}
+
+/* 추가적으로 선택된 체크박스에 체크 표시를 스타일링하고 싶다면, 
+:before 또는 :after 가상 요소와 함께 커스텀 체크 표시를 만들 수 있습니다. */
+.todo-container form input[type="checkbox"]:checked:after {
+    content: ''; /* 가상 요소의 내용을 설정합니다 */
+    /* 여기에 체크 표시의 스타일을 추가합니다 */
+}
+
+.todo-container li>form {
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+/* 공통 버튼 스타일 */
+.todo-container .btn {
+    border: 2px solid black;
     border-radius: 4px;
-    cursor: pointer; /* 커서 모양 변경 */
-    display: inline-block; /* 인라인 블록 요소로 표시 */
+    cursor: pointer;
+    display: inline-block;
+    padding: 5px 15px; /* 조정된 패딩 값 */
+    font-size: 25px; /* 조정된 글꼴 크기 */
+    line-height: 1.5; /* 조정된 라인 높이 */
+    text-align: center; /* 텍스트 중앙 정렬 */
+    vertical-align: middle; /* 수직 방향 중앙 정렬 */
+    /* 추가적으로 높이를 직접 설정할 수도 있지만, 일반적으로 권장하지 않음 */
 }
 
 /* 수정 버튼 스타일 */
-.btn-primary {
-    background-color: #007bff; /* 파란색 배경 */
+.btn-container .btn-primary {
+    background-color: hsl(0, 0%, 20%); /* 파란색 배경 */
     color: white; /* 글자색은 흰색 */
+    font-size: 1rem;
+    font-family: 'YEONGJUSeonbiTTF';
+    border: none;
+    margin-right: 4px;
 }
 
 /* 삭제 버튼 스타일 */
-.btn-danger {
-    margin-bottom: 0;
-    margin-top: 20px;
+.btn-container .btn-danger {
     background-color: #dc3545; /* 빨간색 배경 */
     color: white; /* 글자색은 흰색 */
+    margin-top: 20px; /* 필요에 따라 조정 */
+    font-size: 1rem;
+    border: none;
 }
 
-/* 채팅 아이콘 고정 위치 설정 */
-a.chat-icon {
-    position: fixed; /* 고정 위치 */
-    right: 20px; /* 오른쪽에서 20px 떨어진 곳에 위치 */
-    bottom: 20px; /* 하단에서 20px 떨어진 곳에 위치 */
-    width: 50px; /* 너비 설정 */
-    height: 50px; /* 높이 설정 */
-    border-radius: 50%; /* 원형으로 설정 */
+.btn-primary:hover {
+    background-color: black;
+}
+
+.btn-danger:hover {
+    background-color: red;
+}
+
+/* -------------------채팅----------------- */
+
+.main_image a {
+    text-decoration: none;
+    color: #d9534f;
+}
+
+/* 메시지 컨테이너 스타일링 */
+#message-container {
     display: flex;
-    align-items: center;
-    justify-content: center;
-    background-color: #007bff; /* 파란색 배경 */
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2); /* 그림자 효과 추가 */
-    text-decoration: none; /* 텍스트 밑줄 제거 */
-}
-
-a.chat-icon:hover {
-    background-color: #0056b3; /* 호버시 색상 변경 */
-}
-
-a.chat-icon img {
-    max-width: 100%;
-    border-radius: 50%; /* 이미지를 원형으로 유지 */
+    flex-direction: column;
+    /* justify-content: center; */
+    align-items: flex-start;
+    max-width: 600px; /* 최대 너비 설정 */
+    margin: 300px auto 0; /* 가운데 정렬을 위해 좌우 마진을 자동으로 설정, 위쪽 마진은 20px로 설정 */
+    border: 1px solid #ccc; /* 테두리 설정 */
+    background-color: #f9f9f9; /* 배경색 설정 */
+    padding: 10px; /* 패딩 설정 */
+    margin-bottom: 10px; /* 하단 마진 설정 */
+    height: 300px; /* 높이 설정 */
+    overflow-y: auto; /* 내용이 넘칠 경우만 스크롤바 생성 */
 }
 
 
 
+/* 폼 스타일링 */
+#messageForm {
+    max-width: 600px; /* 최대 너비 설정 */
+    margin: 0 auto; /* 가운데 정렬을 위해 좌우 마진을 자동으로 설정 */
+    display: flex; /* 폼 내 요소들을 가로로 배열 */
+    margin-bottom: 20px; /* 폼 하단 마진 설정 */
+}
+
+/* 유저 입력 필드 스타일링 */
+#formUser {
+    flex: 1; /* 나머지 공간 차지 */
+    padding: 10px; /* 패딩 설정 */
+    border: 1px solid #ccc; /* 테두리 설정 */
+    margin-right: 10px; /* 오른쪽 마진 설정 */
+}
+
+/* 메시지 입력 필드 스타일링 */
+#formMessage {
+    flex: 3; /* 폼User 입력 필드보다 넓은 공간 차지 */
+    padding: 10px; /* 패딩 설정 */
+    border: 1px solid #ccc; /* 테두리 설정 */
+    margin-right: 10px; /* 오른쪽 마진 설정 */
+}
+
+/* 전송 버튼 스타일링 */
+#messageForm button {
+    padding: 10px 20px; /* 패딩 설정 */
+    border: none; /* 테두리 제거 */
+    border-radius: 10px;
+    background-color: hsl(0, 0%, 20%); /* 배경색 설정 */
+    color: white; /* 글자색 설정 */
+    cursor: pointer; /* 커서 모양 변경 */
+}
+
+/* 전송 버튼 호버 효과 */
+#messageForm button:hover {
+    background-color: black; /* 배경색 변경 */
+}
+
+
+/* -------------------팀----------------- */
+
+.current-user-profile {
+    display: flex;
+    flex-direction: column;
+}
+.current-user-profile img {
+    align-self: center;
+}
+
+.current-user-profile h2 {
+    text-align: center;
+}
+
+.btn-primary {
+    background-color: hsl(0, 0%, 20%);
+}
+
+/* -----경고------*/
+
+div.alert.alert-danger {
+    margin-bottom: 0;
+}

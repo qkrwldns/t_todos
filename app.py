@@ -215,7 +215,7 @@ def team():
             'UserID': member[0],
             'Username': member[1],
             # Make sure the default image URL is accessible.
-            'ProfilePic': member[2] if member[2] else 'https://surgassociates.com/wp-content/uploads/610-6104451_image-placeholder-png-user-profile-placeholder-image-png-600x629.jpg'
+            'ProfilePic': member[2] if member[2]  else url_for('static', filename='img/user_img.png')
         }
         for member in team_members_tuples if member[0] != current_user.id
     ]
@@ -224,10 +224,9 @@ def team():
     cursor.execute("SELECT ProfilePic FROM Users WHERE UserID = %s", (current_user.id,))
     current_user_pic_tuple = cursor.fetchone()
     # Make sure the default image URL is accessible.
-    current_user_pic = current_user_pic_tuple[0] if current_user_pic_tuple[0] else 'https://path-to-your-default-image.jpg'
-
+    current_user_pic = current_user_pic_tuple[0] if current_user_pic_tuple[0] else url_for('static', filename='img/user_img.png')
     cursor.close()  # Remember to close the cursor after the operations are done.
-
+    print(current_user.id)
     return render_template('team.html', name=current_user.username, current_page='team', team_members=team_members, current_user_pic=current_user_pic)
 
 # 팀 편집 라우트
@@ -243,7 +242,7 @@ def edit_team_member(user_id):
         user_details = {
             'UserID': user_details_tuple[0],
             'Username': user_details_tuple[1],
-            'ProfilePic': user_details_tuple[2]
+            'ProfilePic': user_details_tuple[2] if user_details_tuple[2]  else url_for('static', filename='img/user_img.png')
         }
         # If user details are found, pass them to the template.
         return render_template('team_edit.html', name=current_user.username, user=user_details)

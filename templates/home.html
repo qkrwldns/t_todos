@@ -1,48 +1,59 @@
-{% extends "base.html" %}
-{% block content %}
+{% extends "base.html" %} {% block content %}
 <div class="todo-container">
-    <h1>TO Do</h1>
-    {% if message %}
-        <p>{{ message }}</p>
-    {% else %}
-        {% if is_admin %}
-            <!-- Add 버튼은 관리자에게만 보입니다. -->
-            <form action="{{ url_for('add_todo') }}" method="post">
-                <input type="text" name="title" placeholder="New todo" required>
-                <button type="submit">Add</button>
-            </form>
-        {% endif %}
-        
-        <ul>
-            {% for todo in todos %}
-            <li>
-                <form action="{{ url_for('toggle_todo', todo_id=todo.TodoID) }}" method="post" style="display: inline;">
-                    <input type="checkbox" name="is_completed" onchange="this.form.submit()" {{ 'checked' if todo.IsCompleted }}>
-                    {{ todo.Title }}
-                </form>
-                <!-- 체크박스와 관련된 조건을 제거하여 모든 사용자가 체크박스를 사용할 수 있도록 합니다. -->
-                {% if not todo.IsCompleted %}
-                    <!-- Edit and Delete buttons are visible to admin (UserID = 1) -->
-                    {% if is_admin %}
-                        <a href="{{ url_for('edit_todo', todo_id=todo.TodoID) }}" class="btn btn-primary">Edit</a>
-                        <form action="{{ url_for('delete_todo', todo_id=todo.TodoID) }}" method="post" style="display: inline;">
-                            <button type="submit" class="btn btn-danger">Delete</button>
-                        </form>
-                    {% endif %}
-                {% endif %}
-            </li>
-            {% endfor %}
-        </ul>
-    {% endif %}
-    <div>
+  <h1>TO Do</h1>
+  {% if message %}
+  <p>{{ message }}</p>
+  {% else %} {% if is_admin %}
+  <!-- Add 버튼은 관리자에게만 보입니다. -->
+  <form action="{{ url_for('add_todo') }}" method="post">
+    <input type="text" name="title" placeholder="New todo" required />
+    <button class="btn" type="submit">Add</button>
+  </form>
+  {% endif %}
 
-    </div>
+  <ul>
+    {% for todo in todos %}
+    <li>
+      <form
+        action="{{ url_for('toggle_todo', todo_id=todo.TodoID) }}"
+        method="post"
+        style="display: inline"
+      >
+        <input type="checkbox" name="is_completed" onchange="this.form.submit()"
+        {{ 'checked' if todo.IsCompleted }}> {{ todo.Title }}
+      </form>
+      <!-- 체크박스와 관련된 조건을 제거하여 모든 사용자가 체크박스를 사용할 수 있도록 합니다. -->
+      {% if not todo.IsCompleted %}
+      <!-- Edit and Delete buttons are visible to admin (UserID = 1) -->
+      {% if is_admin %}
+      <div class="btn-container" style="display: flex; flex-direction: row; align-items: center;">
+        <a
+        href="{{ url_for('edit_todo', todo_id=todo.TodoID) }}"
+        class="btn btn-primary"
+        >Edit</a
+      >
+      <form
+        action="{{ url_for('delete_todo', todo_id=todo.TodoID) }}"
+        method="post"
+      >
+        <button type="submit" class="btn btn-danger">Delete</button>
+      </div>
+     
+      </form>
+      {% endif %} {% endif %}
+    </li>
+    {% endfor %}
+  </ul>
+  {% endif %}
+  <div></div>
+  {% if current_user.team_id and current_user.id|int == 1  %}
     <div class="main_image">
         <a href="{{ url_for('chat') }}">
             <img src="{{ url_for('static', filename='img/image.png') }}" alt="Chat" style="width: 50px; height: 50px;">
-            chat
+            Chat
         </a>
     </div>
+    {% endif %}
 </div>
 
 {% endblock %}

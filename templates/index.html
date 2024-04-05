@@ -1,29 +1,34 @@
-{% extends "base.html" %}
-{% import "bootstrap/wtf.html" as wtf %}
-{% block content %}
+{% extends "base.html" %} {% import "bootstrap/wtf.html" as wtf %} {% block
+content %}
 <section class="login">
-    <h1>T_Todos</h1>
-    {% with messages = get_flashed_messages() %}
-    {% if messages %}
-    {% for message in messages %}
-    <div class="alert alert-danger" role="alert">
-        {{ message }}
+  <h1>T_Todos</h1>
+  {% with messages = get_flashed_messages(with_categories=true) %} {% if
+  messages %} {% for category, message in messages %}
+  <div class="alert alert-{{ category }}" role="alert">{{ message }}</div>
+  {% endfor %} {% endif %} {% endwith %}
+
+  <form action="/" method="post">
+    <input
+      type="text"
+      id="username"
+      name="username"
+      required
+      placeholder="username"
+    />
+
+    <input
+      type="password"
+      id="password"
+      name="password"
+      required
+      placeholder="password"
+    />
+    <!-- 로그인 버튼 -->
+    <div class="button-group">
+      <button type="submit" name="action" value="login">Login</button>
+      <!-- 회원가입 버튼 -->
+      <button type="submit" name="action" value="register">Register</button>
     </div>
-    {% endfor %}
-    {% endif %}
-    {% endwith %}
-    <form action="/" method="post">
-        <label for="username">Username:</label>
-        <input type="text" id="username" name="username" required>
-        <label for="password">Password:</label>
-        <input type=
-        "password" id="password" name="password" required>
-        <!-- 로그인 버튼 -->
-        <div class="button-group">
-            <button type="submit" name="action" value="login">Login</button>
-            <!-- 회원가입 버튼 -->
-            <button type="submit" name="action" value="register">Register</button>
-        </div>
-    </form>
+  </form>
 </section>
 {% endblock %}
